@@ -40,14 +40,26 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
    ```bash
    cd restaurant-backend
    ```
-
-2. Configure MySQL database:
+2. To clean and run project:
+  ``` mvn clean package
+   or 
+   /.mvnw clean package
+   ```
+3. To install
+   ```mvn install 
+   or
+   /.mvnw install
+   ```
+4. Configure MySQL database:
    - Create a database named `restaurant_assistant`
    - Update `application.properties` with your MySQL credentials
 
-3. Run the Spring Boot application:
+5. Run the Spring Boot application:
    ```bash
-   mvn spring-boot:run
+   mvn spring-boot:run 
+   or 
+   ./mvnw spring-boot:run
+
    ```
    The backend will start on `http://localhost:8080`
 
@@ -67,17 +79,7 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
    ```bash
    npm run dev
    ```
-   The frontend will start on `http://localhost:5173`
-
-## 🌐 API Endpoints
-
-### Menu Endpoints
-- `GET /api/menu` - Get full menu
-- `GET /api/menu/categories` - Get menu categories
-- `GET /api/menu/specials` - Get special items
-
-### Chat Endpoints
-- `POST /api/chat` - Send message to chat assistant
+   The frontend will start on `http://localhost:3000`
 
 ## 📱 Features Breakdown
 
@@ -105,68 +107,36 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
 - Loading states and error handling
 - Beautiful transitions and animations
 
-## 📁 Project Structure for frontend
+## 📁 Project Structure for Backend 
 
 ```
-src/
-├── components/                 # Reusable React components
-│   ├── chat/                  # Chat-related components
-│   │   ├── ChatInput.tsx     # Message input component
-│   │   ├── ChatMessage.tsx   # Individual message display
-│   │   └── ChatBubble.tsx    # Message bubble styling
-│   ├── menu/ 
-    |    |__ Menu.ts           # Menu-related components
-│   │   ├── MenuDisplay.tsx   # Main menu display
-│   │   ├── MenuItem.tsx      # Individual menu item
-│   │   └── MenuCategory.tsx  # Category section
-    |___constants/ 
-    |   |__ api.ts           # api related constants url
-│   └── common/               # Shared components
-│       ├── Button.tsx        # Reusable button
-│       ├── Icons.tsx         # Icon components
-│       └── Loading.tsx       # Loading states
-├── services/                  # API and service layer
-│   ├── api/                  # API clients
-│   │   ├── menuService.ts       # Menu-related API calls
-│   │   └── chatApi.ts       # Chat-related API calls
-│   └── utils/                # Utility functions
-│       ├── formatters.ts     # Data formatters
-│       └── validators.ts     # Input validation
-├── types/                     # TypeScript type definitions
-│   ├── menu.ts              # Menu-related types
-│   └── index.ts             # Type exports
-├── hooks/                     # Custom React hooks
-│   ├── useChat.ts           # Chat functionality
-│   └── useMenu.ts           # Menu functionality
-├── context/                   # React Context providers
-│   ├── ChatContext.tsx      # Chat state management
-│   └── MenuContext.tsx      # Menu state management
-├── styles/                    # Style-related files
-│   ├── tailwind.css         # Tailwind imports
-│   └── animations.css       # Custom animations
-├── constants/                 # Application constants
-│   ├── api.ts               # API endpoints
-│   └── config.ts            # App configuration
-├── assets/                    # Static assets
-│   └── icons/               # Custom icons
-├── App.tsx                    # Main application component
-├── main.tsx                  # Application entry point
-└── vite-env.d.ts             # Vite type declarations
-
-public/                        # Public static files
-├── favicon.ico               # Site favicon
-└── robots.txt                # SEO robots file
-
-config/                       # Configuration files
-├── vite.config.ts           # Vite configuration
-├── tailwind.config.js       # Tailwind configuration
-├── tsconfig.json            # TypeScript configuration
-└── eslint.config.js         # ESLint configuration
-
-.vscode/                      # VS Code configuration
-└── settings.json            # Editor settings
-```
-```
+restaurant-backend/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/
+│   │   │       └── restaurant/
+│   │   │           ├── config/
+│   │   │           │   └── CorsConfig.java           # CORS configuration
+│   │   │           ├── controller/
+│   │   │           │   ├── UnifiedController.java       # Menu endpoints
+│   │   │           ├── dto/
+│   │   │           │   ├── MenuDTO.java             # Menu data transfer objects
+│   │   │           ├── model/
+│   │   │           │   ├── MenuItem.java            # Menu item entity
+│   │   │           ├── exception/
+│   │   │           │   └── GlobalExceptionHandle.java         # Exception to handle
+│   │   │           │   └── ResourceExceptionHandle.java         # Exception to handle
+│   │   │           │   └── ValidationExceptionHandle.java         # Exception to handle
+│   │   │           ├── repository/
+│   │   │           │   └── MenuItemRepository.java   # Menu data access
+│   │   │           ├── service/
+│   │   │           │   └── UnifiedService.java         # business logic
+│   │   │           └── RestaurantApplication.java    # Main application class
+│   │   └── resources/
+│   │       └── application.properties               # Application configuration for MYSQL conncetion 
+│   └── test/                                       # Test directory
+└── pom.xml 
 
 ## 🤝 Contributing
 
