@@ -1,68 +1,101 @@
-import React from 'react';
-import { Bot } from 'lucide-react';
-import { ChatProvider } from './context/ChatContext';
-import { ChatBubble } from './components/chat/ChatBubble';
-import { ChatInput } from './components/chat/ChatInput';
-import { Loading } from './components/common/Loading';
-import { useChat } from './hooks/useChat';
-
-const ChatContainer: React.FC = () => {
-  const { messages, isLoading, sendMessage } = useChat();
-
-  return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b px-6 py-4">
-        <div className="max-w-4xl mx-auto flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-            <Bot size={24} className="text-blue-600" />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">AI Assistant</h1>
-            <p className="text-sm text-gray-500">Ask me anything about our restaurant</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto space-y-6">
-          {messages.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
-                <Bot size={32} className="text-blue-600" />
-              </div>
-              <h2 className="text-lg font-medium text-gray-900 mb-2">
-                Welcome to our Restaurant Assistant!
-              </h2>
-              <p className="text-gray-500">
-                How can I help you today? You can ask about our menu, make reservations, or get information about our services.
-              </p>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <ChatBubble key={message.id} message={message} />
-            ))
-          )}
-          {isLoading && <Loading />}
-        </div>
-      </div>
-
-      {/* Input Area */}
-      <div className="border-t bg-white px-4 py-4">
-        <div className="max-w-4xl mx-auto">
-          <ChatInput onSendMessage={sendMessage} isLoading={isLoading} />
-        </div>
-      </div>
-    </div>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import { ChatHeader } from './components/ChatHeader';
+import { ChatMessage } from './components/ChatMessage';
+import { ChatInput } from './components/ChatInput';
+import { Message } from './types';
+import { apiService } from './services/apiService';
 
 function App() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchWelcomeMessage = async () => {
+      try {
+        const response = await apiService.getWelcomeMessage();
+        setMessages([
+          {
+            id: '1',
+            content: response.message,
+            type: 'assistant',
+            timestamp: new Date(),
+          },
+          {
+            id: '2',
+            content: 'How can I help you today? You can ask about:\n- Full menu\n- Vegetarian options\n- Vegan options\n- Gluten-free options\n- Spice levels\n- Today\'s specials',
+            type: 'assistant',
+            timestamp: new Date(),
+          },
+        ]);
+      } catch (error) {
+        console.error('Error fetching welcome message:', error);
+        setMessages([
+          {
+            id: '1',
+            content: 'Welcome to our Restaurant Assistant!',
+            type: 'assistant',
+            timestamp: new Date(),
+          },
+        ]);
+      }
+    };
+
+    fetchWelcomeMessage();
+  }, []);
+
+  const handleSendMessage = async (content: string) => {
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content,
+      type: 'user',
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setLoading(true);
+
+    try {
+      const response = await apiService.sendQuery(content);
+      
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: response.message,
+        type: 'assistant',
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error processing message:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "I'm sorry, I couldn't process your request. Please try again.",
+        type: 'assistant',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <ChatProvider>
-      <ChatContainer />
-    </ChatProvider>
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-4xl mx-auto h-screen flex flex-col">
+        <ChatHeader />
+        <div className="flex-1 overflow-y-auto p-4">
+          {messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          {loading && (
+            <div className="flex items-center justify-center py-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          )}
+        </div>
+        <ChatInput onSendMessage={handleSendMessage} disabled={loading} />
+      </div>
+    </div>
   );
 }
 

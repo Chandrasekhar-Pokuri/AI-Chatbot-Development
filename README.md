@@ -16,7 +16,6 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
 ### Frontend
 - React 18 with TypeScript
 - Tailwind CSS for styling
-- Lucide React for icons
 - Vite for build tooling
 
 ### Backend
@@ -42,7 +41,7 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
    ```
 
 2. Configure MySQL database:
-   - Create a database named `restaurant_assistant`
+   - Create a database named `AIChatBOT`
    - Update `application.properties` with your MySQL credentials
 
 3. Run the Spring Boot application:
@@ -67,17 +66,7 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
    ```bash
    npm run dev
    ```
-   The frontend will start on `http://localhost:5173`
-
-## 🌐 API Endpoints
-
-### Menu Endpoints
-- `GET /api/menu` - Get full menu
-- `GET /api/menu/categories` - Get menu categories
-- `GET /api/menu/specials` - Get special items
-
-### Chat Endpoints
-- `POST /api/chat` - Send message to chat assistant
+   The frontend will start on `http://localhost:3000`
 
 ## 📱 Features Breakdown
 
@@ -109,55 +98,25 @@ A modern restaurant management system with an AI-powered chat assistant and dyna
 
 ```
 src/
-├── components/                 # Reusable React components
-│   ├── chat/                  # Chat-related components
+├── components/                 # Reusable React component
 │   │   ├── ChatInput.tsx     # Message input component
 │   │   ├── ChatMessage.tsx   # Individual message display
-│   │   └── ChatBubble.tsx    # Message bubble styling
-│   ├── menu/ 
-    |    |__ Menu.ts           # Menu-related components
-│   │   ├── MenuDisplay.tsx   # Main menu display
-│   │   ├── MenuItem.tsx      # Individual menu item
-│   │   └── MenuCategory.tsx  # Category section
-    |___constants/ 
-    |   |__ api.ts           # api related constants url
-│   └── common/               # Shared components
-│       ├── Button.tsx        # Reusable button
-│       ├── Icons.tsx         # Icon components
-│       └── Loading.tsx       # Loading states
+│   │   └── ChatHeader.tsx    #  Header
 ├── services/                  # API and service layer
-│   ├── api/                  # API clients
-│   │   ├── menuService.ts       # Menu-related API calls
-│   │   └── chatApi.ts       # Chat-related API calls
-│   └── utils/                # Utility functions
-│       ├── formatters.ts     # Data formatters
-│       └── validators.ts     # Input validation
+│   │   ├── apiService.ts       # Sends HTTP requests to the backend
 ├── types/                     # TypeScript type definitions
-│   ├── menu.ts              # Menu-related types
 │   └── index.ts             # Type exports
-├── hooks/                     # Custom React hooks
-│   ├── useChat.ts           # Chat functionality
-│   └── useMenu.ts           # Menu functionality
-├── context/                   # React Context providers
-│   ├── ChatContext.tsx      # Chat state management
-│   └── MenuContext.tsx      # Menu state management
 ├── styles/                    # Style-related files
 │   ├── tailwind.css         # Tailwind imports
-│   └── animations.css       # Custom animations
-├── constants/                 # Application constants
-│   ├── api.ts               # API endpoints
-│   └── config.ts            # App configuration
-├── assets/                    # Static assets
-│   └── icons/               # Custom icons
+│   └── global.css.          # global animations
+│   └── animations.css       # Custom animation
+├── index.css                   # index css component
 ├── App.tsx                    # Main application component
 ├── main.tsx                  # Application entry point
-└── vite-env.d.ts             # Vite type declarations
-
-public/                        # Public static files
-├── favicon.ico               # Site favicon
-└── robots.txt                # SEO robots file
 
 config/                       # Configuration files
+└── vite-env.d.ts             # Vite type declarations
+├── env                      # Stores the backend API base URL
 ├── vite.config.ts           # Vite configuration
 ├── tailwind.config.js       # Tailwind configuration
 ├── tsconfig.json            # TypeScript configuration
